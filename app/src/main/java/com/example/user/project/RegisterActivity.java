@@ -14,15 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlacePicker;
-
 
 public class RegisterActivity extends AppCompatActivity{
 
-    int PLACE_PICKER_REQUEST = 1;
     //f = form
     EditText fName;
     EditText fPhoneNumber;
@@ -66,19 +60,10 @@ public class RegisterActivity extends AppCompatActivity{
                 sharedPref.edit().putString("ClientType",""+getSelectedClientType());
                 sharedPref.edit().commit();
 
-                Intent intent = new Intent(RegisterActivity.this, MapsActivity.class);
+                Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
                 intent.putExtra("state","register");
-                //startActivity(intent);
+                startActivity(intent);
 
-                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-
-                try {
-                    startActivityForResult(builder.build(RegisterActivity.this), PLACE_PICKER_REQUEST);
-                } catch (GooglePlayServicesRepairableException e) {
-                    e.printStackTrace();
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    e.printStackTrace();
-                }
             }
         });
         ((TextView)findViewById(R.id.TVloginBtn)).setOnClickListener(new View.OnClickListener() {
@@ -90,15 +75,7 @@ public class RegisterActivity extends AppCompatActivity{
         });
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PLACE_PICKER_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                Place place = PlacePicker.getPlace(data, this);
-                String toastMsg = String.format("Place: %s", place.getName());
-                Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
-            }
-        }
-    }
+
 
     public char getSelectedClientType(){
         if(fClientType == R.id.ImgClientSelect){
