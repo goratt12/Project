@@ -36,21 +36,45 @@
                 android:gravity="center"
                 android:layout_marginBottom="15dp">
 
-                <ImageView
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    app:srcCompat="@drawable/client_icon_selected"
-                    android:id="@+id/ImgClientSelect"
-                    android:onClick="customRadioButtonReplace"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center">
 
-                <ImageView
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    app:srcCompat="@drawable/driver_icon"
-                    android:id="@+id/ImgDriverSelect"
-                    android:layout_marginRight="15dp"
-                    android:onClick="customRadioButtonReplace"/>
+                    <ImageView
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        app:srcCompat="@drawable/client_icon_selected"
+                        android:id="@+id/ImgClientSelect"
+                        android:onClick="customRadioButtonReplace"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Client"
+                        android:textSize="20sp"/>
+                </LinearLayout>
 
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_marginLeft="15dp">
+
+                    <ImageView
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        app:srcCompat="@drawable/driver_icon"
+                        android:id="@+id/ImgDriverSelect"
+                        android:onClick="customRadioButtonReplace"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Driver"
+                        android:textSize="20sp"/>
+                </LinearLayout>
 
             </LinearLayout>
 

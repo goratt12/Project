@@ -14,12 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlacePicker;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -107,35 +101,10 @@ public class HomeActivity extends AppCompatActivity
     }
 
     public void askDelivery(){
-        Message msg = new Message(Protocol.CLIENT, Protocol.ASK_DELIVERY);//TODO fix client type
-        //location format = 31°47′0″N 35°13′0″E as String
-        msg.putStringExtra("31°47′0″N 35°13′0″E"); //pick
-        msg.putStringExtra("31°47′0″N 35°14′0″E"); //drop
-
-        msg.putIntExtra(2500); //volume in cm X cm
-        msg.putIntExtra(1000); //weight in grams
-
-        MyApplication.getTcpClient().send(msg.getByteArray());
-        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-
-        try {
-            startActivityForResult(builder.build(HomeActivity.this), PLACE_PICKER_REQUEST);
-        } catch (GooglePlayServicesRepairableException e) {
-            e.printStackTrace();
-        } catch (GooglePlayServicesNotAvailableException e) {
-            e.printStackTrace();
-        }
+        Intent intent = new Intent(HomeActivity.this, AskDeliveryActivity.class);
+        startActivity(intent);
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PLACE_PICKER_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                Place place = PlacePicker.getPlace(data, this);
-                String toastMsg = String.format("location: %s", place.getLatLng());
-                Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
-            }
-        }
-    }
 
     public void cancelDelivery(){
         Message msg = new Message(Protocol.CLIENT, Protocol.CANCEL_DELIVERY);//TODO fix client type

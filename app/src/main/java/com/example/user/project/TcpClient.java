@@ -36,9 +36,8 @@ public class TcpClient {
     private TcpClient(){
         this.context = MyApplication.getContext();
         Intent intent = new Intent(context, TcpHandler.class);
-        if(!isServiceRunning(TcpHandler.class.getName())) {
-            context.startService(intent);
-        }
+        context.startService(intent);
+
         context.bindService(intent, new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
