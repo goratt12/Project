@@ -14,6 +14,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import communication.Message;
+import communication.Protocol;
+import communication.TcpClient;
+
 
 public class RegisterActivity extends AppCompatActivity{
 
@@ -48,17 +52,19 @@ public class RegisterActivity extends AppCompatActivity{
                 msg.putStringExtra(fEmail.getText().toString());
 
                 byte[] messageBytes = msg.getByteArray();
-                MyApplication.getTcpClient().send(msg.getByteArray());
+                MyApplication.getTcpClient().send(messageBytes);
 
                 SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(RegisterActivity.this);
+                SharedPreferences.Editor editor = sharedPref.edit();
 
+                editor.putString("Name",fName.getText().toString());
+                editor.putString("PhoneName",fPhoneNumber.getText().toString());
+                editor.putString("Password",fPassword.getText().toString());
+                editor.putString("Email",fEmail.getText().toString());
+                editor.putString("ClientType",""+getSelectedClientType());
+                editor.commit();
 
-                sharedPref.edit().putString("Name",fName.getText().toString());
-                sharedPref.edit().putString("PhoneName",fPhoneNumber.getText().toString());
-                sharedPref.edit().putString("Password",fPassword.getText().toString());
-                sharedPref.edit().putString("Email",fEmail.getText().toString());
-                sharedPref.edit().putString("ClientType",""+getSelectedClientType());
-                sharedPref.edit().commit();
+                Toast.makeText(RegisterActivity.this, ""+getSelectedClientType(), Toast.LENGTH_LONG).show();
 
                 Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
                 intent.putExtra("state","register");

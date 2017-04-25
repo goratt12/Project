@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import communication.Protocol;
+import communication.TcpClient;
+
 
 public class MyApplication extends Application {
     private static TcpClient mTcpClient = null;
@@ -30,6 +33,6 @@ public class MyApplication extends Application {
 
     public static char getClientType(){
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
-        return sharedPref.getString("ClientType","2").charAt(0);
+        return sharedPref.getString("ClientType",""+ Protocol.CONTROL).charAt(0);
     }
 }

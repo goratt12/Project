@@ -15,10 +15,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
-    int PLACE_PICKER_REQUEST = 1;
+import communication.Message;
+import communication.Protocol;
 
+public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +107,7 @@ public class HomeActivity extends AppCompatActivity
 
 
     public void cancelDelivery(){
-        Message msg = new Message(Protocol.CLIENT, Protocol.CANCEL_DELIVERY);//TODO fix client type
+        Message msg = new Message(Protocol.CLIENT, Protocol.CANCEL_DELIVERY);
 
         msg.putIntExtra(1234); //delivery id
         msg.putStringExtra("because im lazy");

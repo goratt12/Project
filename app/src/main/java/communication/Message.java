@@ -1,4 +1,4 @@
-package com.example.user.project;
+package communication;
 
 import java.nio.ByteBuffer;
 

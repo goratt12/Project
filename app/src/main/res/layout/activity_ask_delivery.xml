@@ -10,6 +10,15 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.user.project.AskDeliveryActivity">
 
+    <Button
+        android:text="Ask For Delivery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/btnAskDelivery"
+        android:layout_marginBottom="50dp"/>
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -25,10 +34,9 @@
 
             <TextView
                 android:text="Pickup Location:"
-                android:layout_width="70dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView3"
-                android:layout_weight="1" />
+                android:id="@+id/textView3"/>
 
             <TextView
                 android:layout_width="70dp"
@@ -52,10 +60,9 @@
 
             <TextView
                 android:text="Drop Location:"
-                android:layout_width="70dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView4"
-                android:layout_weight="1" />
+                android:id="@+id/textView4" />
 
             <TextView
                 android:layout_width="70dp"
@@ -79,13 +86,13 @@
             android:gravity="left">
 
             <TextView
-                android:text="TextView"
+                android:text="Weight"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView5"
-                android:layout_width="70dp" />
+                android:layout_width="120dp"/>
 
             <EditText
-                android:layout_width="70dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:inputType="numberDecimal"
                 android:ems="10"
@@ -98,13 +105,13 @@
             android:gravity="left">
 
             <TextView
-                android:text="TextView"
+                android:text="Volume"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView6"
-                android:layout_width="70dp" />
+                android:layout_width="120dp" />
 
             <EditText
-                android:layout_width="70dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:inputType="numberDecimal"
                 android:ems="10"
@@ -113,14 +120,5 @@
 
 
     </LinearLayout>
-
-    <Button
-        android:text="Ask For Delivery"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/btnAskDelivery"
-        android:layout_marginBottom="50dp"/>
 
 </RelativeLayout>

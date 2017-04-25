@@ -29,8 +29,10 @@
         </receiver>
 
         <service
-            android:name=".TcpClient$TcpHandler"
-            android:exported="false" />
+            android:name="communication.TcpClient$TcpHandler"
+            android:enabled="true"
+            android:process=":my_process"
+            android:isolatedProcess="true" />
 
         <activity
             android:name=".RegisterActivity"
@@ -58,7 +60,11 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".AskDeliveryActivity"></activity>
+        <activity android:name=".AskDeliveryActivity"></activity><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
     </application>
 
 </manifest>

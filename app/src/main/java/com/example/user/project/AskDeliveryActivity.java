@@ -15,9 +15,12 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 
+import communication.Message;
+import communication.Protocol;
+
 public class AskDeliveryActivity extends AppCompatActivity {
-    int PICK_PICKER_REQUEST = 1;
-    int DROP_PICKER_REQUEST = 1;
+    int PICK_UP_PICKER_REQUEST = 1;
+    int DROP_PICKER_REQUEST = 2;
 
     private String pickUpLocation;
     private String dropLocation;
@@ -26,15 +29,17 @@ public class AskDeliveryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ask_delivery);
+        setTitle("Ask for delivery");
 
-        if(MyApplication.getClientType() != Protocol.CLIENT){
-            //TODO only client can access this activity
+        if (MyApplication.getClientType() != Protocol.CLIENT) {
+            Toast.makeText(AskDeliveryActivity.this, "you are not permitted to this activity, "+MyApplication.getClientType(), Toast.LENGTH_LONG).show();
+            finish(); //close activity
         }
 
-        Button buttonPickUp = (Button)findViewById(R.id.btnPickupLocation);
-        Button buttonDrop = (Button)findViewById(R.id.btnDropLocation);
+        Button buttonPickUp = (Button) findViewById(R.id.btnPickupLocation);
+        Button buttonDrop = (Button) findViewById(R.id.btnDropLocation);
 
-        Button buttonConfirm = (Button)findViewById(R.id.btnAskDelivery);
+        Button buttonConfirm = (Button) findViewById(R.id.btnAskDelivery);
 
         final PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
 
@@ -42,7 +47,7 @@ public class AskDeliveryActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    startActivityForResult(builder.build(AskDeliveryActivity.this), PICK_PICKER_REQUEST);
+                    startActivityForResult(builder.build(AskDeliveryActivity.this), PICK_UP_PICKER_REQUEST);
                 } catch (GooglePlayServicesRepairableException e) {
                     e.printStackTrace();
                 } catch (GooglePlayServicesNotAvailableException e) {
@@ -59,14 +64,15 @@ public class AskDeliveryActivity extends AppCompatActivity {
                     e.printStackTrace();
                 } catch (GooglePlayServicesNotAvailableException e) {
                     e.printStackTrace();
-                };
+                }
+                ;
             }
         });
 
         buttonConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!validate()){
+                if (!validate()) {
                     //validate input
                     Toast.makeText(AskDeliveryActivity.this, "the data is not full", Toast.LENGTH_LONG).show();
                     return;
@@ -77,39 +83,41 @@ public class AskDeliveryActivity extends AppCompatActivity {
                 msg.putStringExtra(getPickUpLocation()); //pick
                 msg.putStringExtra(getDropLocation()); //drop
 
-                String volume = ((EditText)findViewById(R.id.etVolume)).getText().toString();
+                String volume = ((EditText) findViewById(R.id.etVolume)).getText().toString();
                 msg.putIntExtra(Integer.parseInt(volume)); //volume in cm X cm
 
-                String weight = ((EditText)findViewById(R.id.etWeight)).getText().toString();
+                String weight = ((EditText) findViewById(R.id.etWeight)).getText().toString();
                 msg.putIntExtra(Integer.parseInt(weight)); //weight in grams
 
                 MyApplication.getTcpClient().send(msg.getByteArray());
+                finish();
             }
         });
-
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PICK_PICKER_REQUEST) {
-            if (resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == PICK_UP_PICKER_REQUEST) {
+                Toast.makeText(AskDeliveryActivity.this, "pick up", Toast.LENGTH_LONG).show();
+
                 Place place = PlacePicker.getPlace(this, data);
                 this.pickUpLocation = convert(place.getLatLng().latitude, place.getLatLng().longitude);
 
-                ((TextView)findViewById(R.id.tvPickupLocation)).setText(this.pickUpLocation);
+                ((TextView) findViewById(R.id.tvPickupLocation)).setText(place.getAddress());
 
                 String toastMsg = String.format("location: %s", place.getLatLng());
                 Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
-            }
-        }
-        else if (requestCode == DROP_PICKER_REQUEST) {
-            if (resultCode == RESULT_OK) {
+            } else if (requestCode == DROP_PICKER_REQUEST) {
+                Toast.makeText(AskDeliveryActivity.this, "drop", Toast.LENGTH_LONG).show();
+
                 Place place = PlacePicker.getPlace(this, data);
                 this.dropLocation = convert(place.getLatLng().latitude, place.getLatLng().longitude);
 
-                ((TextView)findViewById(R.id.tvDropLocation)).setText(this.dropLocation);
+                ((TextView) findViewById(R.id.tvDropLocation)).setText(place.getAddress());
 
-                String toastMsg = String.format("location: %s", place.getLatLng());
+                String toastMsg = String.format("location: %s", this.dropLocation);
                 Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
+
             }
         }
     }
@@ -164,18 +172,23 @@ public class AskDeliveryActivity extends AppCompatActivity {
         return builder.toString();
     }
 
-    private boolean validate(){
-        if(dropLocation == null)
+    private boolean validate() {
+        if (dropLocation == null)
             return false;
-        if(pickUpLocation == null)
-            return false;
-
-        String volume = ((EditText)findViewById(R.id.etVolume)).getText().toString();
-        if(volume.equals(""))
+        else if (dropLocation.equals(""))
             return false;
 
-        String weight = ((EditText)findViewById(R.id.etWeight)).getText().toString();
-        if(weight.equals(""))
+        if (pickUpLocation == null)
+            return false;
+        else if (pickUpLocation.equals(""))
+            return false;
+
+        String volume = ((EditText) findViewById(R.id.etVolume)).getText().toString();
+        if (volume.equals(""))
+            return false;
+
+        String weight = ((EditText) findViewById(R.id.etWeight)).getText().toString();
+        if (weight.equals(""))
             return false;
 
         //else

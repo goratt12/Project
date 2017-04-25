@@ -1,4 +1,4 @@
-package com.example.user.project;
+package communication;
 
 public class Protocol {
     public static final int INT_SIZE = 4;
