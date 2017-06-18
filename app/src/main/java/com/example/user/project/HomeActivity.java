@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import communication.Message;
 import communication.Protocol;
+import communication.TcpClient;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -28,7 +29,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
         setTitle("Home Page");
 
-        ((TextView)findViewById(R.id.textView2)).setText("welcome - "+getIntent().getExtras().getString("state","none"));
+        //getIntent().getExtras().getString("state","none")
+        ((TextView)findViewById(R.id.textView2)).setText("welcome - "+(MyApplication.getClientType() == Protocol.CLIENT ? "Client" : "Driver"));
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -38,6 +40,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         .setAction("Action", null).show();
             }
         });
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -110,8 +113,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         Message msg = new Message(Protocol.CLIENT, Protocol.CANCEL_DELIVERY);
 
         msg.putIntExtra(1234); //delivery id
-        msg.putStringExtra("because im lazy");
+        msg.putStringExtra("because I don't want to");
 
         MyApplication.getTcpClient().send(msg.getByteArray());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        final Intent intent = new Intent(MyApplication.getContext(), TcpClient.TcpHandler.class);
+        MyApplication.getContext().startService(intent);
     }
 }

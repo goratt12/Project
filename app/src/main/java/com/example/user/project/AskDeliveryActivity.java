@@ -1,8 +1,11 @@
 package com.example.user.project;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -43,10 +46,12 @@ public class AskDeliveryActivity extends AppCompatActivity {
 
         final PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
 
+
         buttonPickUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
+                    statusCheck();
                     startActivityForResult(builder.build(AskDeliveryActivity.this), PICK_UP_PICKER_REQUEST);
                 } catch (GooglePlayServicesRepairableException e) {
                     e.printStackTrace();
@@ -59,6 +64,7 @@ public class AskDeliveryActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
+                    statusCheck();
                     startActivityForResult(builder.build(AskDeliveryActivity.this), DROP_PICKER_REQUEST);
                 } catch (GooglePlayServicesRepairableException e) {
                     e.printStackTrace();
@@ -89,6 +95,8 @@ public class AskDeliveryActivity extends AppCompatActivity {
                 String weight = ((EditText) findViewById(R.id.etWeight)).getText().toString();
                 msg.putIntExtra(Integer.parseInt(weight)); //weight in grams
 
+                msg.putStringExtra("hello world"); //notes
+
                 MyApplication.getTcpClient().send(msg.getByteArray());
                 finish();
             }
@@ -98,26 +106,27 @@ public class AskDeliveryActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             if (requestCode == PICK_UP_PICKER_REQUEST) {
-                Toast.makeText(AskDeliveryActivity.this, "pick up", Toast.LENGTH_LONG).show();
-
                 Place place = PlacePicker.getPlace(this, data);
                 this.pickUpLocation = convert(place.getLatLng().latitude, place.getLatLng().longitude);
 
-                ((TextView) findViewById(R.id.tvPickupLocation)).setText(place.getAddress());
+                String location = place.getAddress().toString();
+                if(location.equals("")) location = this.pickUpLocation;
+
+                ((TextView) findViewById(R.id.tvPickupLocation)).setText(location);
 
                 String toastMsg = String.format("location: %s", place.getLatLng());
-                Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
+                //Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
             } else if (requestCode == DROP_PICKER_REQUEST) {
-                Toast.makeText(AskDeliveryActivity.this, "drop", Toast.LENGTH_LONG).show();
-
                 Place place = PlacePicker.getPlace(this, data);
                 this.dropLocation = convert(place.getLatLng().latitude, place.getLatLng().longitude);
 
-                ((TextView) findViewById(R.id.tvDropLocation)).setText(place.getAddress());
+                String location = place.getAddress().toString();
+                if(location.equals("")) location = this.pickUpLocation;
+
+                ((TextView) findViewById(R.id.tvDropLocation)).setText(location);
 
                 String toastMsg = String.format("location: %s", this.dropLocation);
-                Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
-
+                //Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -193,5 +202,32 @@ public class AskDeliveryActivity extends AppCompatActivity {
 
         //else
         return true;
+    }
+
+    public void statusCheck() {
+        final LocationManager manager = (LocationManager) getSystemService(MyApplication.getContext().LOCATION_SERVICE);
+
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            buildAlertMessageNoGps();
+
+        }
+    }
+
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 }

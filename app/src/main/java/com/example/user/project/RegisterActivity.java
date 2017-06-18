@@ -1,7 +1,5 @@
 package com.example.user.project;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,13 +18,14 @@ import communication.Protocol;
 import communication.TcpClient;
 
 
-public class RegisterActivity extends AppCompatActivity{
+public class RegisterActivity extends AppCompatActivity implements ReceivedMessage.MessageHandler{
 
     //f = form
     EditText fName;
     EditText fPhoneNumber;
     EditText fPassword;
     EditText fEmail;
+    ProgressBar spinner;
     int fClientType;
 
     @Override
@@ -39,6 +39,11 @@ public class RegisterActivity extends AppCompatActivity{
         fEmail = (EditText)findViewById(R.id.ETemail);
         fPassword = (EditText)findViewById(R.id.ETpassword);
         fClientType = R.id.ImgClientSelect;
+
+        spinner = (ProgressBar)findViewById(R.id.progressBar1);
+        spinner.setVisibility(View.GONE); //hide loading spinner
+
+        ReceivedMessage.addRegisterListener(this);
 
         MyApplication.setTcpClient(TcpClient.getInstance());
 
@@ -54,22 +59,13 @@ public class RegisterActivity extends AppCompatActivity{
                 byte[] messageBytes = msg.getByteArray();
                 MyApplication.getTcpClient().send(messageBytes);
 
-                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(RegisterActivity.this);
-                SharedPreferences.Editor editor = sharedPref.edit();
+                spinner.setVisibility(View.VISIBLE); //show loading spinner
 
-                editor.putString("Name",fName.getText().toString());
-                editor.putString("PhoneName",fPhoneNumber.getText().toString());
-                editor.putString("Password",fPassword.getText().toString());
-                editor.putString("Email",fEmail.getText().toString());
-                editor.putString("ClientType",""+getSelectedClientType());
-                editor.commit();
-
-                Toast.makeText(RegisterActivity.this, ""+getSelectedClientType(), Toast.LENGTH_LONG).show();
-
-                Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
-                intent.putExtra("state","register");
-                startActivity(intent);
-
+                /*test*/
+                Bundle data = new Bundle();
+                data.putBoolean("isConfirmed", true);
+                handleMessage(data);
+                /*test*/
             }
         });
         ((TextView)findViewById(R.id.TVloginBtn)).setOnClickListener(new View.OnClickListener() {
@@ -81,7 +77,34 @@ public class RegisterActivity extends AppCompatActivity{
         });
     }
 
+    @Override
+    public void handleMessage(Bundle data) {
+        boolean isConfirmed = data.getBoolean("isConfirmed");
+        spinner.setVisibility(View.GONE); //hide loading spinner
 
+        if(isConfirmed){
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(RegisterActivity.this);
+            SharedPreferences.Editor editor = sharedPref.edit();
+
+            editor.putString("Name",fName.getText().toString());
+            editor.putString("PhoneName",fPhoneNumber.getText().toString());
+            editor.putString("Password",fPassword.getText().toString());
+            editor.putString("Email",fEmail.getText().toString());
+            editor.putString("ClientType",""+getSelectedClientType());
+            editor.commit();
+
+            Toast.makeText(RegisterActivity.this, ""+getSelectedClientType(), Toast.LENGTH_LONG).show();
+
+            Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
+            intent.putExtra("state","register");
+            startActivity(intent);
+            finish();
+        }
+        else{
+            Toast.makeText(RegisterActivity.this, "error registering", Toast.LENGTH_LONG).show();
+            fPassword.setText(""); //reset the password input
+        }
+    }
 
     public char getSelectedClientType(){
         if(fClientType == R.id.ImgClientSelect){
@@ -106,21 +129,5 @@ public class RegisterActivity extends AppCompatActivity{
     }
 
 
-    public static class MyReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            //write message on screen
-            byte[] message = intent.getExtras().getByteArray("message");
-            String s;
-            if(message != null){
-                s = new String(message);
-                Toast.makeText(context, s, Toast.LENGTH_LONG).show();
-            }
-            else {
-                s = "got nothing from server";
-            }
-            Toast.makeText(context, s, Toast.LENGTH_LONG).show();
-        }
-    }
 }
 

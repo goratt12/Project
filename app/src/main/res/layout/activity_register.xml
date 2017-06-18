@@ -14,11 +14,17 @@
     style="@style/AppTheme.NoActionBar">
 
 
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
     <ScrollView
         android:id="@+id/register_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
 
 
         <LinearLayout
@@ -26,7 +32,7 @@
             android:layout_width="270dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="10dp"
             android:layout_gravity="center_horizontal">
 
             <LinearLayout
@@ -107,13 +113,15 @@
                 android:layout_height="wrap_content">
 
                 <AutoCompleteTextView
+                    android:background="@drawable/register_name"
                     android:id="@+id/ETname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="name"
+                    android:paddingLeft="60dp"
                     android:inputType="text"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                    android:text="guy"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -122,13 +130,15 @@
                 android:layout_height="wrap_content">
 
                 <AutoCompleteTextView
+                    android:background="@drawable/register_phone"
                     android:id="@+id/ETphoneNumber"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="phone number"
+                    android:paddingLeft="60dp"
                     android:inputType="phone"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                    android:text="0542148113"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -137,13 +147,15 @@
                 android:layout_height="wrap_content">
 
                 <AutoCompleteTextView
+                    android:background="@drawable/register_email"
                     android:id="@+id/ETemail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_email"
+                    android:paddingLeft="60dp"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                    android:text="goratt12@gmail.com"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -152,16 +164,15 @@
                 android:layout_height="wrap_content">
 
                 <EditText
+                    android:background="@drawable/register_password"
                     android:id="@+id/ETpassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_password"
-                    android:imeActionId="@+id/login"
-                    android:imeActionLabel="@string/action_register"
-                    android:imeOptions="actionUnspecified"
+                    android:paddingLeft="60dp"
                     android:inputType="textPassword"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                    android:text="1234"/>
 
             </android.support.design.widget.TextInputLayout>
 

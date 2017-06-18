@@ -6,16 +6,16 @@ public class Message {
 
     ByteBuffer msg;
 
-
     public Message(char userType, int msgCode, int length) {
         msg = ByteBuffer.allocate(length);
-        msg.put((byte)userType);
-        msg.putInt(msgCode);
+        msg.put((byte)userType); //message user type
+        msg.put((byte)msgCode); //message code
     }
 
     public Message(char userType, int msgCode) {
         this(userType, msgCode, 1024);
     }
+
 
     public void putStringExtra(String extra){
         msg.putInt(extra.length());

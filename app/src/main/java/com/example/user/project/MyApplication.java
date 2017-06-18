@@ -35,4 +35,6 @@ public class MyApplication extends Application {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         return sharedPref.getString("ClientType",""+ Protocol.CONTROL).charAt(0);
     }
+
+
 }

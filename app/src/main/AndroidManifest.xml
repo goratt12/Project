@@ -22,7 +22,7 @@
         android:icon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <receiver android:name=".RegisterActivity$MyReceiver">
+        <receiver android:name=".ReceivedMessage$MyReceiver">
             <intent-filter>
                 <action android:name="com.project.MESSAGE_FROM_SERVER" />
             </intent-filter>
@@ -30,9 +30,7 @@
 
         <service
             android:name="communication.TcpClient$TcpHandler"
-            android:enabled="true"
-            android:process=":my_process"
-            android:isolatedProcess="true" />
+            android:enabled="true" />
 
         <activity
             android:name=".RegisterActivity"
